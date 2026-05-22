@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/especialidades")
 public class EspecialidadeController {
@@ -46,7 +48,7 @@ public class EspecialidadeController {
     }
 
     @PostMapping
-    public ResponseEntity<Especialidade> inserir(@RequestBody Especialidade especialidade) {
+    public ResponseEntity<Especialidade> cadastrar(@Valid @RequestBody Especialidade especialidade) {
         Especialidade salvo = especialidadeRepository.save(especialidade);
         return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
     }

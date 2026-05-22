@@ -11,5 +11,7 @@ import org.springframework.stereotype.Repository;
 public interface ConsultaRepository extends JpaRepository<Consulta, Long> {
 
     List<Consulta> findByDataBetween(LocalDateTime inicio, LocalDateTime fim);
-    
+    boolean existsByMedicoIdAndData(Long medicoId, LocalDateTime data);
+    boolean existsByPacienteIdAndData(Long pacienteId, LocalDateTime data);
+
 }

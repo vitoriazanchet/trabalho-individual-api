@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/consultas")
 public class ConsultaController {
@@ -47,7 +49,7 @@ public class ConsultaController {
     }
 
     @PostMapping
-    public ResponseEntity<Consulta> inserir(@RequestBody Consulta consulta) {
+    public ResponseEntity<Consulta> cadastrar(@Valid @RequestBody Consulta consulta) {
         Consulta salvo = consultaRepository.save(consulta);
         return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
     }

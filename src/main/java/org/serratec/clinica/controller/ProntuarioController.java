@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/prontuarios")
 public class ProntuarioController {
@@ -37,7 +39,7 @@ public class ProntuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<Prontuario> inserir(@RequestBody Prontuario prontuario) {
+    public ResponseEntity<Prontuario> cadastrar(@Valid @RequestBody Prontuario prontuario) {
         Prontuario salvo = prontuarioRepository.save(prontuario);
         return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
     }

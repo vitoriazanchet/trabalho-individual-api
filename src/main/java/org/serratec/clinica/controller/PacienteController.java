@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/pacientes")
 public class PacienteController {
@@ -44,7 +46,7 @@ public class PacienteController {
     }
 
     @PostMapping
-    public ResponseEntity<Paciente> inserir(@RequestBody Paciente paciente) {
+    public ResponseEntity<Paciente> cadastrar(@Valid @RequestBody Paciente paciente) {
         Paciente salvo = pacienteRepository.save(paciente);
         return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
     }
