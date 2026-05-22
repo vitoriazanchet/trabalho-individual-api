@@ -66,7 +66,7 @@ O projeto segue o modelo de camadas padrão de mercado, garantindo separação d
 
 1. Clone este repositório em sua máquina local:
    ```bash
-   git clone (https://github.com/vitoriazanchet/trabalho-individual-api.git)
+   git clone https://github.com/vitoriazanchet/trabalho-individual-api.git
 
 2. No Postman ou navegador, utilize as url: 
 * GET http://localhost:8080/pacientes - para listar todos os pacientes.
