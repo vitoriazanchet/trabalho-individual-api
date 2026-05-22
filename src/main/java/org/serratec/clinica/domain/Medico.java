@@ -1,6 +1,7 @@
 package org.serratec.clinica.domain;
 
 import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
@@ -30,7 +31,11 @@ public class Medico {
     private String crm;
 
     @ManyToMany
-    @JoinTable(name = "medico_especialidade", joinColumns = @JoinColumn(name = "medico_id"), inverseJoinColumns = @JoinColumn(name = "especialidade_id"))
+    @JoinTable(
+        name = "medico_especialidade", 
+        joinColumns = @JoinColumn(name = "medico_id"), 
+        inverseJoinColumns = @JoinColumn(name = "especialidade_id")
+    )
     private List<Especialidade> especialidade;
 
     @OneToMany(mappedBy = "medico")
@@ -80,6 +85,14 @@ public class Medico {
 
     public void setEspecialidade(List<Especialidade> especialidade) {
         this.especialidade = especialidade;
+    }
+
+    public List<Consulta> getConsulta() { 
+        return consulta;
+    }
+
+    public void setConsulta(List<Consulta> consulta) { 
+        this.consulta = consulta;
     }
 
 }

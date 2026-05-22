@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,7 +26,8 @@ public class Consulta {
     @Column(nullable = false)
     private LocalDateTime data;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private StatusConsulta status;
 
     @ManyToOne
     @JoinColumn(name = "paciente_id")
@@ -39,7 +42,7 @@ public class Consulta {
     public Consulta() {
     }
 
-    public Consulta(Long id, LocalDateTime data, String status, Paciente paciente, Medico medico) {
+    public Consulta(Long id, LocalDateTime data, StatusConsulta status, Paciente paciente, Medico medico) {
         this.id = id;
         this.data = data;
         this.status = status;
@@ -63,11 +66,11 @@ public class Consulta {
         this.data = data;
     }
 
-    public String getStatus() {
+    public StatusConsulta getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusConsulta status) {
         this.status = status;
     }
 

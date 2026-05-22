@@ -38,7 +38,8 @@ public class Paciente {
     private String telefone;
 
     @OneToOne(mappedBy = "paciente", cascade = CascadeType.ALL)
-
+    private Prontuario prontuario;
+    
     @OneToMany(mappedBy = "paciente")
     @JsonManagedReference
     private List<Consulta> consulta;
@@ -103,6 +104,22 @@ public class Paciente {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public Prontuario getProntuario() { 
+        return prontuario; 
+    }
+
+    public void setProntuario(Prontuario prontuario) { 
+        this.prontuario = prontuario; 
+    }
+
+    public List<Consulta> getConsulta() { 
+        return consulta; 
+    }
+    
+    public void setConsulta(List<Consulta> consulta) { 
+        this.consulta = consulta; 
     }
 
 }
