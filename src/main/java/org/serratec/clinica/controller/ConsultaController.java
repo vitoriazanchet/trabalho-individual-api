@@ -1,6 +1,7 @@
 package org.serratec.clinica.controller;
 
 import java.util.List;
+import java.time.LocalDateTime;
 
 import org.serratec.clinica.domain.Consulta;
 import org.serratec.clinica.repository.ConsultaRepository;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,6 +36,14 @@ public class ConsultaController {
         return consultaRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<List<Consulta>> buscarPorData(
+            @RequestParam LocalDateTime inicio,
+            @RequestParam LocalDateTime fim) {
+        List<Consulta> consultas = consultaRepository.findByDataBetween(inicio, fim);
+        return ResponseEntity.ok(consultas);
     }
 
     @PostMapping
