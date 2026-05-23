@@ -2,8 +2,9 @@ package org.serratec.clinica.controller;
 
 import java.util.List;
 
-import org.serratec.clinica.domain.Medico;
-import org.serratec.clinica.repository.MedicoRepository;
+import org.serratec.clinica.dto.request.MedicoRequest;
+import org.serratec.clinica.dto.response.MedicoResponse;
+import org.serratec.clinica.service.MedicoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,49 +25,41 @@ import jakarta.validation.Valid;
 public class MedicoController {
 
     @Autowired
-    private MedicoRepository medicoRepository;
+    private MedicoService medicoService;
 
     @GetMapping
-    public ResponseEntity<List<Medico>> listar() {
-        List<Medico> medicos = medicoRepository.findAll();
-        return ResponseEntity.ok(medicos);
+    public ResponseEntity<List<MedicoResponse>> listar() {
+        return ResponseEntity.ok(medicoService.listar());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Medico> buscarPorId(@PathVariable Long id){
-        return medicoRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<MedicoResponse> buscarPorId(@PathVariable Long id){
+        return ResponseEntity.ok(medicoService.buscarPorId(id));
     }
 
     @GetMapping("/buscar")
-    public ResponseEntity<List<Medico>> buscarPorNome(@RequestParam String nome) {
-        List<Medico> medicos = medicoRepository.findByNomeContainingIgnoreCase(nome);
-        return ResponseEntity.ok(medicos);
+    public ResponseEntity<List<MedicoResponse>> buscarPorNome(@RequestParam String nome) {
+        return ResponseEntity.ok(medicoService.buscarPorNome(nome));
     }
 
     @PostMapping
-    public ResponseEntity<Medico> cadastrar(@Valid @RequestBody Medico medico) {
-        Medico salvo = medicoRepository.save(medico);
-        return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
+    public ResponseEntity<MedicoResponse> cadastrar(@Valid @RequestBody MedicoRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(medicoService.cadastrar(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Medico> atualizar(@PathVariable Long id, @RequestBody Medico medico) {
-        if (!medicoRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        medico.setId(id);
-        Medico atualizado = medicoRepository.save(medico);
-        return ResponseEntity.ok(atualizado);
+    public ResponseEntity<MedicoResponse> atualizar(@PathVariable Long id, @RequestBody MedicoRequest request) {
+        return ResponseEntity.ok(medicoService.atualizar(id, request));
+    }
+
+    @PutMapping("/{id}/especialidades")
+    public ResponseEntity<MedicoResponse> associarEspecialidades(@PathVariable Long id, @Valid @RequestBody List<Long> especialidadeIds) {
+        return ResponseEntity.ok(medicoService.associarEspecialidades(id, especialidadeIds));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> apagar(@PathVariable Long id) {
-        if (!medicoRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        medicoRepository.deleteById(id);
+        medicoService.apagar(id);
         return ResponseEntity.noContent().build();
     }
 }

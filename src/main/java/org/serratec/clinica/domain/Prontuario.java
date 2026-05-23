@@ -1,5 +1,7 @@
 package org.serratec.clinica.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,6 +25,7 @@ public class Prontuario {
     private String historico;
 
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name = "paciente_id")
     private Paciente paciente;
 

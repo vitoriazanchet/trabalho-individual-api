@@ -2,8 +2,9 @@ package org.serratec.clinica.controller;
 
 import java.util.List;
 
-import org.serratec.clinica.domain.Especialidade;
-import org.serratec.clinica.repository.EspecialidadeRepository;
+import org.serratec.clinica.dto.request.EspecialidadeRequest;
+import org.serratec.clinica.dto.response.EspecialidadeResponse;
+import org.serratec.clinica.service.EspecialidadeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,51 +25,36 @@ import jakarta.validation.Valid;
 public class EspecialidadeController {
 
     @Autowired
-    private EspecialidadeRepository especialidadeRepository;
+    private EspecialidadeService especialidadeService;
 
     @GetMapping
-    public ResponseEntity<List<Especialidade>> listar() {
-        List<Especialidade> especialidades = especialidadeRepository.findAll();
-        return ResponseEntity.ok(especialidades);
+    public ResponseEntity<List<EspecialidadeResponse>> listar() {
+        return ResponseEntity.ok(especialidadeService.listar());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Especialidade> buscarPorId(@PathVariable Long id){
-        return especialidadeRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<EspecialidadeResponse> buscarPorId(@PathVariable Long id){
+        return ResponseEntity.ok(especialidadeService.buscarPorId(id));
     }
 
     @GetMapping("/buscar")
-    public ResponseEntity<List<Especialidade>> buscarPorNome(
-            @RequestParam String especialidade) {
-        List<Especialidade> lista = especialidadeRepository
-                .findByEspecialidadeContainingIgnoreCase(especialidade);
-        return ResponseEntity.ok(lista);
+    public ResponseEntity<List<EspecialidadeResponse>> buscarPorNome(@RequestParam String especialidade) {
+        return ResponseEntity.ok(especialidadeService.buscarPorNome(especialidade));
     }
 
     @PostMapping
-    public ResponseEntity<Especialidade> cadastrar(@Valid @RequestBody Especialidade especialidade) {
-        Especialidade salvo = especialidadeRepository.save(especialidade);
-        return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
+    public ResponseEntity<EspecialidadeResponse> cadastrar(@Valid @RequestBody EspecialidadeRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(especialidadeService.cadastrar(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Especialidade> atualizar(@PathVariable Long id, @RequestBody Especialidade especialidade) {
-        if (!especialidadeRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        especialidade.setId(id);
-        Especialidade atualizado = especialidadeRepository.save(especialidade);
-        return ResponseEntity.ok(atualizado);
+    public ResponseEntity<EspecialidadeResponse> atualizar(@PathVariable Long id, @Valid @RequestBody EspecialidadeRequest request) {
+        return ResponseEntity.ok(especialidadeService.atualizar(id, request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> apagar(@PathVariable Long id) {
-        if (!especialidadeRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        especialidadeRepository.deleteById(id);
+        especialidadeService.apagar(id);
         return ResponseEntity.noContent().build();
     }
 }

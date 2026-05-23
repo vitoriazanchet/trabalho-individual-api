@@ -3,8 +3,9 @@ package org.serratec.clinica.controller;
 import java.util.List;
 import java.time.LocalDateTime;
 
-import org.serratec.clinica.domain.Consulta;
-import org.serratec.clinica.repository.ConsultaRepository;
+import org.serratec.clinica.dto.request.ConsultaRequest;
+import org.serratec.clinica.dto.response.ConsultaResponse;
+import org.serratec.clinica.service.ConsultaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,51 +26,36 @@ import jakarta.validation.Valid;
 public class ConsultaController {
 
     @Autowired
-    private ConsultaRepository consultaRepository;
+    private ConsultaService consultaService;
 
     @GetMapping
-    public ResponseEntity<List<Consulta>> listar() {
-        List<Consulta> consultas = consultaRepository.findAll();
-        return ResponseEntity.ok(consultas);
+    public ResponseEntity<List<ConsultaResponse>> listar() {
+        return ResponseEntity.ok(consultaService.listar());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Consulta> buscarPorId(@PathVariable Long id){
-        return consultaRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<ConsultaResponse> buscarPorId(@PathVariable Long id){
+        return ResponseEntity.ok(consultaService.buscarPorId(id));
     }
 
     @GetMapping("/buscar")
-    public ResponseEntity<List<Consulta>> buscarPorData(
-            @RequestParam LocalDateTime inicio,
-            @RequestParam LocalDateTime fim) {
-        List<Consulta> consultas = consultaRepository.findByDataBetween(inicio, fim);
-        return ResponseEntity.ok(consultas);
+    public ResponseEntity<List<ConsultaResponse>> buscarPorData(@RequestParam LocalDateTime inicio, @RequestParam LocalDateTime fim){
+        return ResponseEntity.ok(consultaService.buscarPorData(inicio, fim));
     }
 
     @PostMapping
-    public ResponseEntity<Consulta> cadastrar(@Valid @RequestBody Consulta consulta) {
-        Consulta salvo = consultaRepository.save(consulta);
-        return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
+    public ResponseEntity<ConsultaResponse> cadastrar(@Valid @RequestBody ConsultaRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(consultaService.cadastrar(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Consulta> atualizar(@PathVariable Long id, @RequestBody Consulta consulta) {
-        if (!consultaRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        consulta.setId(id);
-        Consulta atualizado = consultaRepository.save(consulta);
-        return ResponseEntity.ok(atualizado);
+    public ResponseEntity<ConsultaResponse> atualizar(@PathVariable Long id, @Valid @RequestBody ConsultaRequest request) {
+        return ResponseEntity.ok(consultaService.atualizar(id, request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> apagar(@PathVariable Long id) {
-        if (!consultaRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        consultaRepository.deleteById(id);
+        consultaService.apagar(id);
         return ResponseEntity.noContent().build();
     }
 }

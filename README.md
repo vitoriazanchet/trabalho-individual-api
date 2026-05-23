@@ -76,7 +76,7 @@ O projeto segue o modelo de camadas padrão de mercado, garantindo separação d
 
 3. Edite conforme seu objetivo seguindo os endpoints.
 
-👩‍💻 Aluna Responsável:
+## 👩‍💻 Aluna Responsável:
 
 **Vitória de Paula Zanchet** - [GitHub](https://github.com/vitoriazanchet/) | [LinkedIn](https://www.linkedin.com/in/vitoria-zanchet/)
 

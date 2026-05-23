@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,7 +36,7 @@ public class Paciente {
 
     private String telefone;
 
-    @OneToOne(mappedBy = "paciente", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "paciente")
     private Prontuario prontuario;
     
     @OneToMany(mappedBy = "paciente")

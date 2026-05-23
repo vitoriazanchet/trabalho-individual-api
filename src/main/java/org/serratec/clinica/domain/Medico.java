@@ -2,6 +2,7 @@ package org.serratec.clinica.domain;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
@@ -36,10 +37,12 @@ public class Medico {
         joinColumns = @JoinColumn(name = "medico_id"), 
         inverseJoinColumns = @JoinColumn(name = "especialidade_id")
     )
+    @JsonIgnore
     private List<Especialidade> especialidade;
 
     @OneToMany(mappedBy = "medico")
     @JsonManagedReference
+    @JsonIgnore
     private List<Consulta> consulta;
 
     public Medico() {

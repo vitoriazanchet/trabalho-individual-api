@@ -2,8 +2,9 @@ package org.serratec.clinica.controller;
 
 import java.util.List;
 
-import org.serratec.clinica.domain.Prontuario;
-import org.serratec.clinica.repository.ProntuarioRepository;
+import org.serratec.clinica.dto.request.ProntuarioRequest;
+import org.serratec.clinica.dto.response.ProntuarioResponse;
+import org.serratec.clinica.service.ProntuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,43 +24,31 @@ import jakarta.validation.Valid;
 public class ProntuarioController {
 
     @Autowired
-    private ProntuarioRepository prontuarioRepository;
+    private ProntuarioService prontuarioSercive;
 
     @GetMapping
-    public ResponseEntity<List<Prontuario>> listar() {
-        List<Prontuario> prontuarios = prontuarioRepository.findAll();
-        return ResponseEntity.ok(prontuarios);
+    public ResponseEntity<List<ProntuarioResponse>> listar() {
+        return ResponseEntity.ok(prontuarioSercive.listar());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Prontuario> buscarPorId(@PathVariable Long id){
-        return prontuarioRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<ProntuarioResponse> buscarPorId(@PathVariable Long id){
+        return ResponseEntity.ok(prontuarioSercive.buscarPorId(id));
     }
 
     @PostMapping
-    public ResponseEntity<Prontuario> cadastrar(@Valid @RequestBody Prontuario prontuario) {
-        Prontuario salvo = prontuarioRepository.save(prontuario);
-        return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
+    public ResponseEntity<ProntuarioResponse> cadastrar(@Valid @RequestBody ProntuarioRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(prontuarioSercive.cadastrar(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Prontuario> atualizar(@PathVariable Long id, @RequestBody Prontuario prontuario) {
-        if (!prontuarioRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        prontuario.setId(id);
-        Prontuario atualizado = prontuarioRepository.save(prontuario);
-        return ResponseEntity.ok(atualizado);
+    public ResponseEntity<ProntuarioResponse> atualizar(@PathVariable Long id, @Valid @RequestBody ProntuarioRequest request) {
+        return ResponseEntity.ok(prontuarioSercive.atualizar(id, request));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> apagar(@PathVariable Long id) {
-        if (!prontuarioRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        prontuarioRepository.deleteById(id);
+        prontuarioSercive.apagar(id);
         return ResponseEntity.noContent().build();
     }
 }
